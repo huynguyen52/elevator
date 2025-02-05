@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/api/axios-client.ts","./src/api/elavator.api.ts","./src/components/elevator-panel.tsx","./src/components/elevator.tsx","./src/enums/index.ts","./src/interface/index.ts"],"version":"5.7.3"}
