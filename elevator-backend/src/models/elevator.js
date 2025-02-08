@@ -46,18 +46,23 @@ class Elevator {
 
   moveToFloor(floor) {
     // Add the target floor to the queue if it's not already there
-    if (!this._queue.includes(floor)) {
+    if (
+      !this._queue.find(
+        item =>
+          item.floor === floor.floor && item.direction === floor.direction,
+      )
+    ) {
       this._queue.push(floor);
     }
 
     // Sort the queue based on direction
-    this._queue.sort((a, b) => a - b);
+    this._queue.sort((a, b) => a.floor - b.floor);
 
     // Determine the direction if the elevator is idle
     if (this._direction === ElevatorDirection.IDLE) {
-      if (this._currentFloor < floor) {
+      if (this._currentFloor < floor.floor) {
         this._direction = ElevatorDirection.UP;
-      } else if (this._currentFloor > floor) {
+      } else if (this._currentFloor > floor.floor) {
         this._direction = ElevatorDirection.DOWN;
       }
     }
@@ -88,9 +93,9 @@ class Elevator {
     }
 
     // Check if the current floor matches a queued floor
-    if (this._queue.includes(this._currentFloor)) {
+    if (this._queue.find(f => f.floor === this._currentFloor)) {
       // Stop at the floor and open the door
-      this._queue = this._queue.filter(f => f !== this._currentFloor);
+      this._queue = this._queue.filter(f => f.floor !== this._currentFloor);
       this.openDoor();
 
       this._recalculateDirection();
@@ -99,7 +104,7 @@ class Elevator {
   _recalculateDirection() {
     // Recalculate direction based on the remaining queue
     if (this._queue.length > 0) {
-      const nextFloor = this._queue[0];
+      const nextFloor = this._queue[0].floor;
       if (nextFloor > this._currentFloor) {
         this._direction = ElevatorDirection.UP;
       } else if (nextFloor < this._currentFloor) {

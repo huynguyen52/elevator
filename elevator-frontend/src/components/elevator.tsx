@@ -9,7 +9,7 @@ type ElevatorProps = {
   onOpenDoor?: () => void;
   onCloseDoor?: () => void;
   onToggleDoor?: (state: DoorState) => void;
-  queue: number[];
+  queue: { floor: number; direction: ElevatorDirection }[];
 };
 
 export default function Elevator({
@@ -20,7 +20,11 @@ export default function Elevator({
   onToggleDoor,
   queue,
 }: ElevatorProps) {
-  const activeButton = queue.includes(floor);
+  const isActiveButton = (direction: ElevatorDirection) => {
+    return queue.some(
+      item => item.floor === floor && item.direction === direction,
+    );
+  };
 
   useEffect(() => {
     let timer = undefined;
@@ -47,7 +51,9 @@ export default function Elevator({
             viewBox="0 0 24 24"
             strokeWidth="1.5"
             stroke="currentColor"
-            className={`size-6 ${activeButton && 'text-red-400'}`}
+            className={`size-6 ${
+              isActiveButton(ElevatorDirection.UP) && 'text-red-400'
+            }`}
           >
             <path
               strokeLinecap="round"
@@ -66,7 +72,9 @@ export default function Elevator({
             viewBox="0 0 24 24"
             strokeWidth="1.5"
             stroke="currentColor"
-            className={`size-6 ${activeButton && 'text-red-400'}`}
+            className={`size-6 ${
+              isActiveButton(ElevatorDirection.DOWN) && 'text-red-400'
+            }`}
           >
             <path
               strokeLinecap="round"

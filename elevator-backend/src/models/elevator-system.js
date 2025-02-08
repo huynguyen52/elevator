@@ -15,7 +15,7 @@ class ElevatorSystem {
   requestElevator(floor, direction) {
     let availableElevator = this.findNearestElevator(floor, direction);
     if (availableElevator) {
-      availableElevator.moveToFloor(floor);
+      availableElevator.moveToFloor({ floor, direction });
     }
   }
 
@@ -46,25 +46,29 @@ class ElevatorSystem {
       }
       // Check if elevator is moving towards the requested floor in the same direction
       else if (elevatorDirection === direction) {
-        if (
-          direction === ElevatorDirection.UP &&
-          currentFloor <= floor &&
-          queue.length > 0 &&
-          Math.max(...queue) >= floor
-        ) {
-          if (distance < minDistance) {
-            minDistance = distance;
-            nearestElevator = elevator;
+        if (direction === ElevatorDirection.UP) {
+          if (
+            currentFloor <= floor &&
+            (queue.length === 0 ||
+              Math.max(...queue.map(q => q.floor)) >= floor ||
+              Math.max(...queue.map(q => q.floor)) < floor)
+          ) {
+            if (distance < minDistance) {
+              minDistance = distance;
+              nearestElevator = elevator;
+            }
           }
-        } else if (
-          direction === ElevatorDirection.DOWN &&
-          currentFloor >= floor &&
-          queue.length > 0 &&
-          Math.min(...queue) <= floor
-        ) {
-          if (distance < minDistance) {
-            minDistance = distance;
-            nearestElevator = elevator;
+        } else if (direction === ElevatorDirection.DOWN) {
+          if (
+            currentFloor >= floor &&
+            (queue.length === 0 ||
+              Math.min(...queue.map(q => q.floor)) <= floor ||
+              Math.min(...queue.map(q => q.floor)) > floor)
+          ) {
+            if (distance < minDistance) {
+              minDistance = distance;
+              nearestElevator = elevator;
+            }
           }
         }
       }
